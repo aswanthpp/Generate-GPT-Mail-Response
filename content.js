@@ -13,8 +13,8 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
            const form = document.createElement('form');
         form.innerHTML = `
           <label for="prompt">What is the email about?</label><br>
-          <input type="text" id="prompt" name="prompt"><br>
-          <input type="submit" value="Generate Email">
+          <input type="text" id="textPrompt" name="textPrompt"><br>
+          <input type="submit" value="Submit">
         `;
         // Add the form to the compose view
         event.composeView.insertHTMLIntoBodyAtCursor(form);
