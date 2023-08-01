@@ -1,4 +1,4 @@
-# Gmail Auto Reply
+# Generate GPT Mail Response
 
 This project aims to create chrome extension for Gmail, to generate reply text for a given email using Open AI Completion api.
 ![Screenshot](./Sample.png)
