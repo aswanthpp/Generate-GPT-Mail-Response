@@ -1,0 +1,21 @@
+{
+  "name": "Gen GPT Reply",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "inboxsdk.js",
+        "content.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "https://mail.google.com/",
+    "https://inbox.google.com/"
+  ],
+  "manifest_version": 2
+}
+  
