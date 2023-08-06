@@ -1,5 +1,7 @@
-const SDK_KEY = "YOUR_INBOX_SDK_API_KEY";
-const API_KEY = "YOUR_OPEN_AI_API_KEY";
+import * as InboxSDK from '@inboxsdk/core';
+
+const SDK_KEY = "sdk_aswanth_app_id_bbe910f9cf";
+const API_KEY = "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";
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
@@ -12,7 +14,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           console.log("Compose inside compose view");
            const form = document.createElement('form');
         form.innerHTML = `
-          <label for="prompt">What is the email about?</label><br>
+          <label for="prompt">Create Prompt?</label><br>
           <input type="text" id="textPrompt" name="textPrompt"><br>
           <input type="submit" value="Submit">
         `;
@@ -23,10 +25,10 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           // Get the value of the prompt input field
-          const textPrompt = form.querySelector('#prompt').value;
+          const textPrompt = form.querySelector('#textPrompt').value;
           console.log("Compose Response from Test func : "+textPrompt);
           response = await generateText(textPrompt);
-//          response=callGPT(textPrompt);
+          response=callGPT(textPrompt);
           console.log(response)
           event.composeView.insertTextIntoBodyAtCursor(response);
           });
