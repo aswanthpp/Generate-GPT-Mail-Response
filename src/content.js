@@ -1,7 +1,19 @@
 import * as InboxSDK from '@inboxsdk/core';
+try{
+const yaml = require("js-yaml");
+const fs = require("fs");
+let yamlFile = fs.readFileSync("keys.yaml", "utf8");
+let loadedYaml = yaml.parse(yamlFile);
+console.log(loadedYaml.InBoxSDK);
+console.log(loadedYaml.Open_AI);
+}catch (e){
+console.log(e);
+}
 
-const SDK_KEY = "sdk_aswanth_app_id_bbe910f9cf";
-const API_KEY = "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";
+
+
+const SDK_KEY = "INBOX_SDK_KEY";
+const API_KEY = "OPEN_AI_KEY";
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
@@ -53,6 +65,7 @@ async function generateText(prompt) {
        "max_tokens": 2048
      })
   });
+  try{
   const json = await response.json();
   console.log(json)
   console.log(json.choices.text)
@@ -62,5 +75,9 @@ async function generateText(prompt) {
 
 
   return json.choices["0"].text;
+  }catch (e) {
+  console.log(e);
+  return "Got Exception";
+  }
 
 }

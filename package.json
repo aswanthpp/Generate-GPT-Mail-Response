@@ -1,5 +1,5 @@
 {
-  "name": "Generate-GPT-Mail-Response",
+  "name": "generate-gpt-mail-response",
   "version": "0.1.0",
   "description": "Gmail extension to Generate Email using Open AI",
   "private": true,
@@ -14,14 +14,19 @@
     "type": "git",
     "url": "git+https://github.com/aswanthpp/Generate-GPT-Mail-Response.git"
   },
-  "author": "",
+  "author": "Aswanth P P",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/aswanthpp/Generate-GPT-Mail-Response/issues"
   },
   "homepage": "https://github.com/aswanthpp/Generate-GPT-Mail-Response#readme",
   "dependencies": {
-    "@inboxsdk/core": "^1.1.6"
+    "@inboxsdk/core": "^1.1.6",
+    "js-yaml": "^4.1.0",
+    "fs": "0.0.1-security"
+  },
+  "browser": {
+    "fs": false
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
