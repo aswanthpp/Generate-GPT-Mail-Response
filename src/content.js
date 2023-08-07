@@ -1,19 +1,14 @@
 import * as InboxSDK from '@inboxsdk/core';
-try{
-const yaml = require("js-yaml");
-const fs = require("fs");
-let yamlFile = fs.readFileSync("keys.yaml", "utf8");
-let loadedYaml = yaml.parse(yamlFile);
-console.log(loadedYaml.InBoxSDK);
-console.log(loadedYaml.Open_AI);
-}catch (e){
-console.log(e);
+var keysJson = [];
+try {
+
+    keysJson = require('./keys.json');
+
+} catch (e) {
+    console.log(e);
 }
-
-
-
-const SDK_KEY = "INBOX_SDK_KEY";
-const API_KEY = "OPEN_AI_KEY";
+const SDK_KEY = keysJson['InBoxSDK'];
+const API_KEY = keysJson['Open_AI'];
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
@@ -40,7 +35,6 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           const textPrompt = form.querySelector('#textPrompt').value;
           console.log("Compose Response from Test func : "+textPrompt);
           response = await generateText(textPrompt);
-          response=callGPT(textPrompt);
           console.log(response)
           event.composeView.insertTextIntoBodyAtCursor(response);
           });
@@ -50,7 +44,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
 });
 
 async function generateText(prompt) {
-
+try{
   // Make the API request
   const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'POST',
@@ -65,7 +59,7 @@ async function generateText(prompt) {
        "max_tokens": 2048
      })
   });
-  try{
+
   const json = await response.json();
   console.log(json)
   console.log(json.choices.text)
