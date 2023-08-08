@@ -1,5 +1,14 @@
-const SDK_KEY = "YOUR_INBOX_SDK_API_KEY";
-const API_KEY = "YOUR_OPEN_AI_API_KEY";
+import * as InboxSDK from '@inboxsdk/core';
+var keysJson = [];
+try {
+
+    keysJson = require('./keys.json');
+
+} catch (e) {
+    console.log(e);
+}
+const SDK_KEY = keysJson['InBoxSDK'];
+const API_KEY = keysJson['Open_AI'];
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
@@ -12,7 +21,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           console.log("Compose inside compose view");
            const form = document.createElement('form');
         form.innerHTML = `
-          <label for="prompt">What is the email about?</label><br>
+          <label for="prompt">Create Prompt?</label><br>
           <input type="text" id="textPrompt" name="textPrompt"><br>
           <input type="submit" value="Submit">
         `;
@@ -23,10 +32,9 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           // Get the value of the prompt input field
-          const textPrompt = form.querySelector('#prompt').value;
+          const textPrompt = form.querySelector('#textPrompt').value;
           console.log("Compose Response from Test func : "+textPrompt);
           response = await generateText(textPrompt);
-//          response=callGPT(textPrompt);
           console.log(response)
           event.composeView.insertTextIntoBodyAtCursor(response);
           });
@@ -36,7 +44,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
 });
 
 async function generateText(prompt) {
-
+try{
   // Make the API request
   const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'POST',
@@ -51,6 +59,7 @@ async function generateText(prompt) {
        "max_tokens": 2048
      })
   });
+
   const json = await response.json();
   console.log(json)
   console.log(json.choices.text)
@@ -60,5 +69,9 @@ async function generateText(prompt) {
 
 
   return json.choices["0"].text;
+  }catch (e) {
+  console.log(e);
+  return "Got Exception";
+  }
 
 }
