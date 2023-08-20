@@ -19,6 +19,9 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
         onClick: function(event) {
           console.log("Compose inside compose view");
+          chrome.storage.local.get('gptApiKey', result => {
+  console.log(result.key);
+});
            const form = document.createElement('form');
         form.innerHTML = `
           <label for="prompt">Create Prompt?</label><br>

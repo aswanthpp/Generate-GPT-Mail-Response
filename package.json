@@ -21,20 +21,18 @@
   },
   "homepage": "https://github.com/aswanthpp/Generate-GPT-Mail-Response#readme",
   "dependencies": {
-    "@inboxsdk/core": "^1.1.6",
-    "js-yaml": "^4.1.0",
-    "fs": "0.0.1-security"
+    "@inboxsdk/core": "^1.1.6"
   },
   "browser": {
     "fs": false
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
+    "html-webpack-plugin": "^5.5.3",
     "rimraf": "^3.0.2",
     "source-map-loader": "^4.0.1",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
-    "webpack-merge": "^5.8.0",
-    "html-webpack-plugin": "^5.5.0"
+    "webpack-merge": "^5.8.0"
   }
 }

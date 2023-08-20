@@ -2,7 +2,7 @@
 
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -27,8 +27,9 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: "static" },
+         { from: "static/css" },
       ],
     }),
-    new HtmlWebpackPlugin({ template: './popup.html' })
+//    new HtmlWebpackPlugin({ template: './popup.html' })
   ],
 };
