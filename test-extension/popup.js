@@ -1,4 +1,7 @@
+    console.log("inside the js")
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("inside the function")
   const form = document.getElementById('myForm');
 
   form.addEventListener('submit', function(event) {
