@@ -8,7 +8,35 @@ try {
     console.log(e);
 }
 const SDK_KEY = keysJson['InBoxSDK'];
+const GPT_MODEL="text-davinci-002"
 let API_KEY;
+
+const GPT_RESPONSE={
+  "warning": "This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations",
+  "id": "cmpl-807PSQ6pQMCzjJ09ST8y5WqTXRznQ",
+  "object": "text_completion",
+  "created": 1695039174,
+  "model": "text-davinci-002",
+  "choices": [
+    {
+      "text": "\n\nHappy birthday, Sumith! Wishing you all the best on your special day. May all your dreams and aspirations come true. Enjoy every moment!",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 7,
+    "completion_tokens": 32,
+    "total_tokens": 39
+  }
+}
+const jsonString=JSON.stringify(GPT_RESPONSE);
+const response = new Response(jsonString, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
 function getGptKeyFromLocalStorage() {
   chrome.storage.local.get('gptKey', result => {
@@ -57,36 +85,28 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
 });
 
 async function generateText(prompt,API_KEY) {
-console.log("inside POST Call");
-console.log(API_KEY)
-try{
-  // Make the API request
-  const response = await fetch('https://api.openai.com/v1/completions', {
-    method: 'POST',
-    headers: {
-       'Content-Type': 'application/json',
-       'Authorization': `Bearer ${API_KEY}`,
-       'Access-Control-Allow-Origin': '*'
-     },
-     body: JSON.stringify({
-       "model": "text-davinci-002",
-       "prompt": prompt,
-       "max_tokens": 2048
-     })
-  });
+    console.log("inside POST Call");
+    try{
+      // Make the API request
+//        const response = await fetch('https://api.openai.com/v1/completions', {
+//            method: 'POST',
+//            headers: {
+//               'Content-Type': 'application/json',
+//               'Authorization': `Bearer ${API_KEY}`,
+//               'Access-Control-Allow-Origin': '*'
+//             },
+//             body: JSON.stringify({
+//               "model": ${GPT_MODEL},
+//               "prompt": prompt,
+//               "max_tokens": 2048
+//             })
+//        });
 
-  const json = await response.json();
-  console.log(json)
-  console.log(json.choices.text)
-
-  console.log(json.choices)
-  console.log(json.choices["0"].text)
-
-
-  return json.choices["0"].text;
-  }catch (e) {
-  console.log(e);
-  return "Got Exception";
-  }
-
+        const json = await response.json();
+        const gptResponse=json.choices["0"].text;
+        return gptResponse;
+      }catch (e) {
+        console.error(e);
+        throw e;
+      }
 }
