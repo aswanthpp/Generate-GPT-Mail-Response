@@ -8,7 +8,19 @@ try {
     console.log(e);
 }
 const SDK_KEY = keysJson['InBoxSDK'];
-const API_KEY = keysJson['Open_AI'];
+let API_KEY;
+
+function getGptKeyFromLocalStorage() {
+  chrome.storage.local.get('gptKey', result => {
+    console.log("Accessing gpt key");
+    console.log(result.gptKey);
+    if (result.gptKey) {
+      API_KEY = result.gptKey;
+    } else {
+      console.error("No 'gptKey' found in local storage.");
+    }
+  });
+}
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
@@ -19,10 +31,8 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
         onClick: function(event) {
           console.log("Compose inside compose view");
-          chrome.storage.local.get('gptApiKey', result => {
-  console.log(result.key);
-});
-           const form = document.createElement('form');
+          getGptKeyFromLocalStorage();
+          const form = document.createElement('form');
         form.innerHTML = `
           <label for="prompt">Create Prompt?</label><br>
           <input type="text" id="textPrompt" name="textPrompt"><br>
@@ -37,7 +47,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           // Get the value of the prompt input field
           const textPrompt = form.querySelector('#textPrompt').value;
           console.log("Compose Response from Test func : "+textPrompt);
-          response = await generateText(textPrompt);
+          response = await generateText(textPrompt,API_KEY);
           console.log(response)
           event.composeView.insertTextIntoBodyAtCursor(response);
           });
@@ -46,7 +56,9 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
   });
 });
 
-async function generateText(prompt) {
+async function generateText(prompt,API_KEY) {
+console.log("inside POST Call");
+console.log(API_KEY)
 try{
   // Make the API request
   const response = await fetch('https://api.openai.com/v1/completions', {
