@@ -20,6 +20,15 @@ function getGptKeyFromLocalStorage() {
     }
   });
 }
+function createInnerHTML(){
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <label for="prompt">Create Prompt?</label><br>
+          <input type="text" id="textPrompt" name="textPrompt"><br>
+          <input type="submit" value="Submit">
+        `;
+        return form;
+}
 async function generateText(prompt,API_KEY) {
     console.log("Calling Open AI Completion API");
     const url = 'https://api.openai.com/v1/completions';
@@ -60,15 +69,11 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
     composeView.addButton({
       title: "Magic Wand!",
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
-        onClick: function(event) {
+      onClick: function(event) {
           console.log("Compose inside compose view");
           getGptKeyFromLocalStorage();
-          const form = document.createElement('form');
-        form.innerHTML = `
-          <label for="prompt">Create Prompt?</label><br>
-          <input type="text" id="textPrompt" name="textPrompt"><br>
-          <input type="submit" value="Submit">
-        `;
+          const form = createInnerHTML();
+
         // Add the form to the compose view
         event.composeView.insertHTMLIntoBodyAtCursor(form);
 
@@ -79,7 +84,11 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           const textPrompt = form.querySelector('#textPrompt').value;
           console.log("Compose Email for : "+textPrompt);
           const responseText = await generateText(textPrompt,API_KEY);
-          event.composeView.setBodyText(responseText);
+          if(event.composeView.isReply){
+           event.composeView.setBodyText(responseText);
+          }else{
+          event.composeView.insertTextIntoBodyAtCursor(responseText);
+          }
           });
         },
     });
