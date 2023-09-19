@@ -10,44 +10,47 @@ try {
 const SDK_KEY = keysJson['InBoxSDK'];
 const GPT_MODEL="text-davinci-002"
 let API_KEY;
-
-const GPT_RESPONSE={
-  "warning": "This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations",
-  "id": "cmpl-807PSQ6pQMCzjJ09ST8y5WqTXRznQ",
-  "object": "text_completion",
-  "created": 1695039174,
-  "model": "text-davinci-002",
-  "choices": [
-    {
-      "text": "\n\nHappy birthday, Sumith! Wishing you all the best on your special day. May all your dreams and aspirations come true. Enjoy every moment!",
-      "index": 0,
-      "logprobs": null,
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 7,
-    "completion_tokens": 32,
-    "total_tokens": 39
-  }
-}
-const jsonString=JSON.stringify(GPT_RESPONSE);
-const response = new Response(jsonString, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
 function getGptKeyFromLocalStorage() {
   chrome.storage.local.get('gptKey', result => {
     console.log("Accessing gpt key");
-    console.log(result.gptKey);
     if (result.gptKey) {
       API_KEY = result.gptKey;
     } else {
       console.error("No 'gptKey' found in local storage.");
     }
   });
+}
+async function generateText(prompt,API_KEY) {
+    console.log("Calling Open AI Completion API");
+    const url = 'https://api.openai.com/v1/completions';
+    const options = {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${API_KEY}`,
+               'Access-Control-Allow-Origin': '*'
+             },
+             body: JSON.stringify({
+               "model": GPT_MODEL,
+               "prompt": prompt,
+               "max_tokens": 2048
+             })
+        };
+    try{
+      // Make the API request
+        const response = await fetch(url,options);
+        const json = await response.json();
+        if(response.status>=400){
+        const errorResponse=json.error.message;
+        alert("Message from OpenAI: "+errorResponse);
+        return null;
+        }
+        const gptResponse=json.choices[0].text;
+        return gptResponse;
+      }catch (e) {
+        console.error(e);
+        throw e;
+      }
 }
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
@@ -74,39 +77,12 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           e.preventDefault();
           // Get the value of the prompt input field
           const textPrompt = form.querySelector('#textPrompt').value;
-          console.log("Compose Response from Test func : "+textPrompt);
-          response = await generateText(textPrompt,API_KEY);
-          console.log(response)
-          event.composeView.insertTextIntoBodyAtCursor(response);
+          console.log("Compose Email for : "+textPrompt);
+          const responseText = await generateText(textPrompt,API_KEY);
+          event.composeView.setBodyText(responseText);
           });
         },
     });
   });
 });
 
-async function generateText(prompt,API_KEY) {
-    console.log("inside POST Call");
-    try{
-      // Make the API request
-//        const response = await fetch('https://api.openai.com/v1/completions', {
-//            method: 'POST',
-//            headers: {
-//               'Content-Type': 'application/json',
-//               'Authorization': `Bearer ${API_KEY}`,
-//               'Access-Control-Allow-Origin': '*'
-//             },
-//             body: JSON.stringify({
-//               "model": ${GPT_MODEL},
-//               "prompt": prompt,
-//               "max_tokens": 2048
-//             })
-//        });
-
-        const json = await response.json();
-        const gptResponse=json.choices["0"].text;
-        return gptResponse;
-      }catch (e) {
-        console.error(e);
-        throw e;
-      }
-}
