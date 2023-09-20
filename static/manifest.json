@@ -17,10 +17,15 @@
     "service_worker": "background.js"
   },
   "permissions": [
-    "scripting"
+    "scripting",
+    "activeTab",
+    "storage"
   ],
   "host_permissions": [
     "https://mail.google.com/"
   ],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "manifest_version": 3
 }
