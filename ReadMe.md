@@ -11,7 +11,7 @@ Update Open AI key, Refer [Generate Open AI Key](https://platform.openai.com/acc
 ### 4. Add Chrome Extension
 a. In Chrome, go to chrome://extensions, turn on Developer mode, click "Load unpacked", and pick the "dist" directory within this project.<br>
 b. Open https://mail.google.com/ and click "Compose an email" at the top left. There's a button added to the Compose view!
-![Screenshot](./sample-compose.png)
+![Screenshot](./docs/images/sample-compose.png)
 
 
 ## References:
