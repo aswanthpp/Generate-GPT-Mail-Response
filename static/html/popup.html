@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Generate GPT Mail Response</title>
+
+    <style>
+        /* Custom CSS for adjusting popup size */
+        body {
+            width: 300px; /* Adjust the width as needed */
+            height: 200px; /* Adjust the height as needed */
+        }
+    </style>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-10">
+    <form id="myForm" action="#" method="POST">
+        <div class="form-group">
+            <label for="inputValue">Enter your Open AI Key:</label>
+            <input type="password" class="form-control  col-md-6" id="inputValue" name="inputValue" placeholder="sk-...JmFN">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+   
+    <small class="text-body-secondary">Open AI key shared is safe and stored in your chrome local storage.</small>
+    <small class="text-body-secondary"><a target="_blank"  href="https://platform.openai.com/account/api-keys">Get your API key from Open AI dashboard.</a> </small>
+
+</div>  
+</body>
+</html>

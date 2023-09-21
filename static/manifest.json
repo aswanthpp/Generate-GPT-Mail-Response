@@ -25,7 +25,12 @@
     "https://mail.google.com/"
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "html/popup.html"
+  },
+  "icons": {
+    "16": "images/magicWand.png",
+    "48": "images/magicWand.png",
+    "128": "images/magicWand.png"
   },
   "manifest_version": 3
 }
