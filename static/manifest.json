@@ -1,5 +1,5 @@
 {
-  "name": "Gen GPT Reply",
+  "name": "Generate GPT Mail",
   "version": "0.1",
   "description": "Generate Email using Open AI",
   "content_scripts": [
