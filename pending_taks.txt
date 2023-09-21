@@ -1,0 +1,5 @@
+1. Taking in the API Key as input from user
+2. Supporting reply to an existing email text
+3. Making the UI better to support key entry and model selection in popup
+Jerry K6:53 PM
+4. Support prompt entry in a popup

@@ -1,15 +1,10 @@
 import * as InboxSDK from '@inboxsdk/core';
-var keysJson = [];
-try {
-
-    keysJson = require('./keys.json');
-
-} catch (e) {
-    console.log(e);
-}
-const SDK_KEY = keysJson['InBoxSDK'];
 const GPT_MODEL="text-davinci-002"
+const SDK_KEY = "sdk_aswanth_app_id_bbe910f9cf"
+
 let API_KEY;
+
+
 function getGptKeyFromLocalStorage() {
   chrome.storage.local.get('gptKey', result => {
     console.log("Accessing gpt key");
