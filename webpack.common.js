@@ -20,14 +20,14 @@ module.exports = {
     ]
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'generate-gpt-mail-extension'),
     clean: true,
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "static" },
-         { from: "static/css" },
+        { from: "static" }
+         
       ],
     }),
 //    new HtmlWebpackPlugin({ template: './popup.html' })
