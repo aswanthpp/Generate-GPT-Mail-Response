@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error(response);
         saveKeyResponse.textContent = response;
       } else {
-        const response='Open AI Key saved to local storage!'
+        const response='Key is saved!'
         console.log(response);
         saveKeyResponse.textContent = response;
       }
