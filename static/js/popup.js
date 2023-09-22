@@ -11,10 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save the value to Chrome local storage
     chrome.storage.local.set({ "gptKey": inputValue }, function() {
+      var saveKeyResponse = document.getElementById('saveKeyResponse');
+
       if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError);
+        const response=chrome.runtime.lastError
+        console.error(response);
+        saveKeyResponse.textContent = response;
       } else {
-        console.log('Value saved to local storage:', inputValue);
+        const response='Open AI Key saved to local storage!'
+        console.log(response);
+        saveKeyResponse.textContent = response;
       }
     });
   });

@@ -18,9 +18,20 @@ function getGptKeyFromLocalStorage() {
 function createInnerHTML(){
         const form = document.createElement('form');
         form.innerHTML = `
-          <label for="prompt">Create Prompt?</label><br>
-          <input type="text" id="textPrompt" name="textPrompt"><br>
-          <input type="submit" value="Submit">
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Textarea Example</title>
+        </head>
+        <body>
+            <form>
+            <textarea rows="4" cols="50" id="textPrompt" name="textPrompt" placeholder="Enter prompt here"></textarea>
+            <br>
+            <input type="submit" value="Submit">
+            </form>
+          </body>
+          </html>
+          
         `;
         return form;
 }
