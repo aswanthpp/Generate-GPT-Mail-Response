@@ -21,6 +21,8 @@
 
 - Get the Open AI API key from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
 - Paste the key in the form and click submit.
+- Choose the Open AI model from the dropdown.
+- Click `submit`
 
 ![Save Key](./images/save-key.png)
 
