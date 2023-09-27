@@ -23,5 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
         saveKeyResponse.textContent = response;
       }
     });
+
+    const gptModel=document.getElementById("myDropdown").value
+    chrome.storage.local.set({ "gptModel": gptModel }, function() {
+      if (chrome.runtime.lastError) {
+        const response=chrome.runtime.lastError
+        console.error(response);
+      } else {
+        const response=gptModel+' is saved!'
+        console.log(response);
+      }
+    });
   });
 });

@@ -25,7 +25,19 @@
             <label for="inputValue">Enter your Open AI Key:</label>
             <input type="password" class="form-control  col-md-6" id="inputValue" name="inputValue" placeholder="sk-...JmFN">
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <div class="form-group">
+            <label for="myDropdown">Select a model:</label>
+            <br>
+            <select id="myDropdown" name="model">
+                <option value="text-davinci-002" selected>text-davinci-002</option>
+                <option value="text-davinci-003">text-davinci-003</option>
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                <option value="gpt-4">gpt-4</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
     </form>
     <small class="text-body-secondary" id="saveKeyResponse"></small>
     <br>

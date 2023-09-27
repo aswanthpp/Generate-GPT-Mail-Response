@@ -1,10 +1,20 @@
 import * as InboxSDK from '@inboxsdk/core';
-const GPT_MODEL="text-davinci-002"
 const SDK_KEY = "sdk_aswanth_app_id_bbe910f9cf"
 
 let API_KEY;
+let GPT_MODEL;
 
-
+function getGptModelFromLocalStorage(){
+  chrome.storage.local.get('gptModel', result => {
+    console.log("Accessing gpt key");
+    if (result.gptKey) {
+      GPT_MODEL = result.gptModel;
+    } else {
+      GPT_MODEL="text-davinci-002";
+      console.error("No 'gptModel' found in local storage.");
+    }
+  });
+}
 function getGptKeyFromLocalStorage() {
   chrome.storage.local.get('gptKey', result => {
     console.log("Accessing gpt key");
@@ -35,7 +45,7 @@ function createInnerHTML(){
         `;
         return form;
 }
-async function generateText(prompt,API_KEY) {
+async function generateText(prompt) {
     console.log("Calling Open AI Completion API");
     const url = 'https://api.openai.com/v1/completions';
     const options = {
@@ -78,6 +88,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       onClick: function(event) {
           console.log("Compose inside compose view");
           getGptKeyFromLocalStorage();
+          getGptModelFromLocalStorage();
           const form = createInnerHTML();
 
         // Add the form to the compose view
@@ -89,7 +100,7 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           // Get the value of the prompt input field
           const textPrompt = form.querySelector('#textPrompt').value;
           console.log("Compose Email for : "+textPrompt);
-          const responseText = await generateText(textPrompt,API_KEY);
+          const responseText = await generateText(textPrompt);
           if(event.composeView.isReply){
            event.composeView.setBodyText(responseText);
           }else{
