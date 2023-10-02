@@ -106,23 +106,35 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       },
     });
   });
-
-  sdk.Lists.registerMessageViewHandler((conversationView) => {
-    conversationView.addButton({
-      title: "Magic Wand!",
-      iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
-      onClick: function(event) {
-        console.log("Inside conversationView");
-        let textPrompt="Create an email reply for \"";
-    
-        const emailContent=event.conversationView.getTextContent();
-        textPrompt+=emailContent+" \"";
-       
-        console.log("Compose Email for : "+textPrompt);
-        const responseText = resolve(generateText(textPrompt));
-        event.conversationView.insertTextIntoBodyAtCursor(responseText);
-      }
-      });
+  var messages;
+  sdk.Conversations.registerThreadViewHandler((threadView) => {
+    messages = threadView.getMessageViews();
+    for(let i=0;i<messages.length;i++){
+      console.log(messages[i]);
+    }
   });
+  sdk.Conversations.registerMessageViewHandler((messageView) => {
+    messageView.addToolbarButton({
+      section: "MORE",
+        title: "Magic Wand!",
+        iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
+        onClick: function(event) {
+          console.log("inside the Message View");
+          console.log(messageView.getThreadView());
+          console.log("after threadView");
+          console.log(resolve(messageView.getMessageIDAsync()));
+          // let textPrompt="Create an email reply for \"";
+      
+          // const emailContent=event.conversationView.getTextContent();
+          // textPrompt+=emailContent+" \"";
+        
+          // console.log("Compose Email for : "+textPrompt);
+          // const responseText = resolve(generateText(textPrompt));
+          // event.conversationView.insertTextIntoBodyAtCursor(responseText);
+        },
+        orderHint: 1
+    });
+  });
+  
 });
 
