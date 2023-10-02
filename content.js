@@ -140,6 +140,23 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       },
     });
   });
-  
+
+  sdk.Lists.registerMessageViewHandler((conversationView) => {
+    conversationView.addButton({
+      title: "Magic Wand!",
+      iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
+      onClick: function(event) {
+        console.log("Inside conversationView");
+        let textPrompt="Create an email reply for \"";
+    
+        const emailContent=event.conversationView.getTextContent();
+        textPrompt+=emailContent+" \"";
+       
+        console.log("Compose Email for : "+textPrompt);
+        const responseText = resolve(generateText(textPrompt));
+        event.conversationView.insertTextIntoBodyAtCursor(responseText);
+      }
+      });
+  });
 });
 
