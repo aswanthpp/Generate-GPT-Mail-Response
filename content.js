@@ -5,13 +5,13 @@ let API_KEY;
 let GPT_MODEL;
 
 function getGptModelFromLocalStorage(){
-  chrome.storage.local.get('gptModel', result => {
+  chrome.storage.local.get("gptModel", result => {
     console.log("Accessing gpt key");
     if (result.gptKey) {
       GPT_MODEL = result.gptModel;
     } else {
       GPT_MODEL="text-davinci-002";
-      console.error("No 'gptModel' found in local storage.");
+      console.log("Model not found in local storage. Assigining default model");
     }
   });
 }
@@ -86,11 +86,11 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       title: "Magic Wand!",
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
       onClick: function(event) {
-          console.log("Compose inside compose view");
-          getGptKeyFromLocalStorage();
-          getGptModelFromLocalStorage();
-          const form = createInnerHTML();
+        console.log("Compose inside compose view");
+        getGptKeyFromLocalStorage();
+        getGptModelFromLocalStorage();
 
+        const form = createInnerHTML();
         // Add the form to the compose view
         event.composeView.insertHTMLIntoBodyAtCursor(form);
 
@@ -99,16 +99,30 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           e.preventDefault();
           // Get the value of the prompt input field
           const textPrompt = form.querySelector('#textPrompt').value;
-          console.log("Compose Email for : "+textPrompt);
+          console.log("Compose Email for : "+textPrompt); 
           const responseText = await generateText(textPrompt);
-          if(event.composeView.isReply){
-           event.composeView.setBodyText(responseText);
-          }else{
-          event.composeView.insertTextIntoBodyAtCursor(responseText);
-          }
-          });
-        },
+          event.composeView.setBodyText(responseText);
+        });   
+      },
     });
+  });
+
+  sdk.Lists.registerMessageViewHandler((conversationView) => {
+    conversationView.addButton({
+      title: "Magic Wand!",
+      iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
+      onClick: function(event) {
+        console.log("Inside conversationView");
+        let textPrompt="Create an email reply for \"";
+    
+        const emailContent=event.conversationView.getTextContent();
+        textPrompt+=emailContent+" \"";
+       
+        console.log("Compose Email for : "+textPrompt);
+        const responseText = resolve(generateText(textPrompt));
+        event.conversationView.insertTextIntoBodyAtCursor(responseText);
+      }
+      });
   });
 });
 
