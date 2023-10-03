@@ -68,7 +68,7 @@ async function generateText(prompt) {
         if(response.status>=400){
         const errorResponse=json.error.message;
         alert("Message from OpenAI: "+errorResponse);
-        return null;
+        return errorResponse;
         }
         const gptResponse=json.choices[0].text;
         return gptResponse;
@@ -86,6 +86,57 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       title: "Generate GPT Mail!",
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
       onClick: function(event) {
+        if(event.composeView.isReply()){
+            console.log("inside the reply")
+            // sdk.Conversations.registerMessageViewHandler((messageView) => {
+
+              sdk.Conversations.registerThreadViewHandler((threadView) => {
+ 
+              console.log("inside the messageView")
+
+            getGptKeyFromLocalStorage();
+          getGptModelFromLocalStorage();
+          // let textPrompt="Create an email reply for \"";
+          let textPrompt=`I would like to generate responses to email based on the context of the conversation. I would you to read through the mails and generate the response. The conversation context will be passed in the following manner
+          <First Mail> <mail content>
+          <response> <content>
+          and so on.
+          The conversation will be passed in a chronological order.  You should generate the mail text that is in response to the last mail exchange\n`;
+          // const emailContent=messageView.getBodyElement().textContent;
+          const messageViews=threadView.getMessageViewsAll();
+          console.log("\nnumber of replies : "+messageViews.length);
+
+          // const handledMessageViews=WeakSet();
+          // setTimeout(() => {
+          //   messageViews.forEach((messageView) => {
+          //     console.log("Message : "+messageView.getBodyElement().textContent);
+          //     if (!handledMessageViews.has(messageView)) {
+          //       // TODO fix this real error
+          //       // throw new Error('No handler called for message view in thread');
+          //     }
+          //   });
+          // }, 0);
+          
+          
+          // for(let i=0;i<messageViews.length;i++){
+            
+          //   if(i==0){
+          //     textPrompt+="<First Mail> <";
+          //   }else{
+          //     textPrompt+="<response> <";
+          //   }
+            
+          //   textPrompt+=messageViews[i].getBodyElement().textContent+">\n";
+          // }
+        
+          console.log("Prompt: "+textPrompt);
+          // generateText(textPrompt).then((response)=> {
+          //   event.composeView.setBodyText(response);
+
+          // });
+            });
+
+        }else{        
         console.log("Compose inside compose view");
         getGptKeyFromLocalStorage();
         getGptModelFromLocalStorage();
@@ -102,36 +153,37 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
           console.log("Compose Email for : "+textPrompt); 
           const responseText = await generateText(textPrompt);
           event.composeView.setBodyText(responseText);
-        });   
+        });  
+      } 
       },
     });
   });
-  sdk.Conversations.registerMessageViewHandler((messageView) => {
-    messageView.addToolbarButton({
-      section: "MORE",
-        title: "Generate GPT Mail!",
-        iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
-        onClick: function(event) {
-          console.log("inside the Message View");
-          getGptKeyFromLocalStorage();
-          getGptModelFromLocalStorage();
-          let textPrompt="Create an email reply for \"";
+  // sdk.Conversations.registerMessageViewHandler((messageView) => {
+  //   messageView.addToolbarButton({
+  //     section: "MORE",
+  //       title: "Generate GPT Mail!",
+  //       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
+  //       onClick: function(event) {
+  //         console.log("inside the Message View");
+  //         getGptKeyFromLocalStorage();
+  //         getGptModelFromLocalStorage();
+  //         let textPrompt="Create an email reply for \"";
       
-          const emailContent=messageView.getBodyElement().textContent;
-          textPrompt+=emailContent+" \"";
+  //         const emailContent=messageView.getBodyElement().textContent;
+  //         textPrompt+=emailContent+" \"";
         
-          console.log("Compose Email for : "+textPrompt);
-          generateText(textPrompt).then((response)=> {
-            console.log(response);
-            // sdk.Compose.openNewComposeView((replyComposeView) => {
-            //   replyComposeView.setBodyText(response);
-            // })
-          });
+  //         console.log("Compose Email for : "+textPrompt);
+  //         generateText(textPrompt).then((response)=> {
+  //           // console.log(response);
+  //           sdk.Compose.openNewComposeView((replyComposeView) => {
+  //             replyComposeView.setBodyText(response);
+  //           })
+  //         });
           
-        },
-        orderHint: 1
-    });
-  });
+  //       },
+  //       orderHint: 1
+  //   });
+  // });
   
 });
 
