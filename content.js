@@ -140,34 +140,32 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       },
     });
   });
-  var messages;
-  sdk.Conversations.registerThreadViewHandler((threadView) => {
-    messages = threadView.getMessageViews();
-    for(let i=0;i<messages.length;i++){
-      console.log(messages[i]);
-    }
-  });
   sdk.Conversations.registerMessageViewHandler((messageView) => {
     messageView.addToolbarButton({
       section: "MORE",
-        title: "Magic Wand!",
+        title: "Generate GPT Mail!",
         iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
         onClick: function(event) {
           console.log("inside the Message View");
-          console.log(messageView.getThreadView());
-          console.log("after threadView");
-          console.log(resolve(messageView.getMessageIDAsync()));
-          // let textPrompt="Create an email reply for \"";
+          getGptKeyFromLocalStorage();
+          getGptModelFromLocalStorage();
+          let textPrompt="Create an email reply for \"";
       
-          // const emailContent=event.conversationView.getTextContent();
-          // textPrompt+=emailContent+" \"";
+          const emailContent=messageView.getBodyElement().textContent;
+          textPrompt+=emailContent+" \"";
         
-          // console.log("Compose Email for : "+textPrompt);
-          // const responseText = resolve(generateText(textPrompt));
-          // event.conversationView.insertTextIntoBodyAtCursor(responseText);
+          console.log("Compose Email for : "+textPrompt);
+          generateText(textPrompt).then((response)=> {
+            console.log(response);
+            // sdk.Compose.openNewComposeView((replyComposeView) => {
+            //   replyComposeView.setBodyText(response);
+            // })
+          });
+          
         },
         orderHint: 1
     });
   });
+  
 });
 
