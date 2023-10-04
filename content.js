@@ -89,16 +89,6 @@ function preparePromptForReply(messageView){
    The conversation will be passed in the chronological order of emails.  You should generate a email text to the last email. Make sure that you should only the email text and no formatting characters.\n`;
 const messageArray=messageView.split("------------------- Original Message -------------------")
 const regexPattern = /On[\s\S]*? wrote:/
-// messageArray.forEach((message) => {
-//    if(firstIteraction){
-//        firstIteraction=false;
-//        const latestMessage=messageArray[0].split(regexPattern);
-//        textPrompt+="<Recent Mail> <"+latestMessage[0]+">\n";
-//        textPrompt+="<Preivous reply> <"+latestMessage[1]+">\n";
-//    }else{
-//        textPrompt+="<Preivous reply> <"+message+">\n";
-//    }
-// });
 
 if(messageArray.length==1){
   const latestMessage=messageArray[0].split(regexPattern);
@@ -162,32 +152,5 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       },
     });
   });
-  // sdk.Conversations.registerMessageViewHandler((messageView) => {
-  //   messageView.addToolbarButton({
-  //     section: "MORE",
-  //       title: "Generate GPT Mail!",
-  //       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
-  //       onClick: function(event) {
-  //         console.log("inside the Message View");
-  //         getGptKeyFromLocalStorage();
-  //         getGptModelFromLocalStorage();
-  //         let textPrompt="Create an email reply for \"";
-      
-  //         const emailContent=messageView.getBodyElement().textContent;
-  //         textPrompt+=emailContent+" \"";
-        
-  //         console.log("Compose Email for : "+textPrompt);
-  //         generateText(textPrompt).then((response)=> {
-  //           // console.log(response);
-  //           sdk.Compose.openNewComposeView((replyComposeView) => {
-  //             replyComposeView.setBodyText(response);
-  //           })
-  //         });
-          
-  //       },
-  //       orderHint: 1
-  //   });
-  // });
-  
 });
 
