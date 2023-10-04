@@ -47,6 +47,8 @@ function createInnerHTML(){
 }
 async function generateText(prompt) {
     console.log("Calling Open AI Completion API");
+    getGptKeyFromLocalStorage();
+    getGptModelFromLocalStorage();
     const url = 'https://api.openai.com/v1/completions';
     const options = {
             method: 'POST',
@@ -78,6 +80,30 @@ async function generateText(prompt) {
       }
 }
 
+function preparePromptForReply(messageView){
+  let textPrompt=`I would like to generate responses to email based on the context of the conversation. I would you to read through the mails and generate the response. The conversation context will be passed in the following manner
+  <Recent Reply> <mail content>
+  <Preivous reply> <mail content>
+  <Preivous reply> <mail content>
+  and so on.
+  The conversation will be passed in the order of most recent email first.  You should generate the reply mail to the most recent email exchange\n`;
+const messageArray=messageView.split("------------------- Original Message -------------------")
+const regexPattern = /On[\s\S]*? wrote:/
+let firstIteraction=true;
+messageArray.forEach((message) => {
+   if(firstIteraction){
+       firstIteraction=false;
+       const latestMessage=messageArray[0].split(regexPattern);
+       textPrompt+="<Recent Reply> <"+latestMessage[0]+">\n";
+       textPrompt+="<Preivous reply> <"+latestMessage[1]+">\n";
+   }else{
+       textPrompt+="<Preivous reply> <"+message+">\n";
+   }
+});
+   return textPrompt;
+
+}
+
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
   sdk.Compose.registerComposeViewHandler((composeView) => {
@@ -88,71 +114,27 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       onClick: function(event) {
         if(event.composeView.isReply()){
             console.log("inside the reply")
-            // sdk.Conversations.registerMessageViewHandler((messageView) => {
-
-              sdk.Conversations.registerThreadViewHandler((threadView) => {
- 
+            sdk.Conversations.registerThreadViewHandler((threadView) => {
               console.log("inside the messageView")
-
-            getGptKeyFromLocalStorage();
-          getGptModelFromLocalStorage();
-          // let textPrompt="Create an email reply for \"";
-          let textPrompt=`I would like to generate responses to email based on the context of the conversation. I would you to read through the mails and generate the response. The conversation context will be passed in the following manner
-          <First Mail> <mail content>
-          <response> <content>
-          and so on.
-          The conversation will be passed in a chronological order.  You should generate the mail text that is in response to the last mail exchange\n`;
-          // const emailContent=messageView.getBodyElement().textContent;
-          const messageViews=threadView.getMessageViewsAll();
-          console.log("\nnumber of replies : "+messageViews.length);
-
-          // const handledMessageViews=WeakSet();
-          // setTimeout(() => {
-          //   messageViews.forEach((messageView) => {
-          //     console.log("Message : "+messageView.getBodyElement().textContent);
-          //     if (!handledMessageViews.has(messageView)) {
-          //       // TODO fix this real error
-          //       // throw new Error('No handler called for message view in thread');
-          //     }
-          //   });
-          // }, 0);
-          
-          
-          // for(let i=0;i<messageViews.length;i++){
-            
-          //   if(i==0){
-          //     textPrompt+="<First Mail> <";
-          //   }else{
-          //     textPrompt+="<response> <";
-          //   }
-            
-          //   textPrompt+=messageViews[i].getBodyElement().textContent+">\n";
-          // }
-        
-          console.log("Prompt: "+textPrompt);
-          // generateText(textPrompt).then((response)=> {
-          //   event.composeView.setBodyText(response);
-
-          // });
+              const messageViews=threadView.getMessageViews()[0].getBodyElement().textContent;
+              const textPrompt=preparePromptForReply(messageViews)        
+              console.log("Prompt: "+textPrompt);
+              generateText(textPrompt).then((response)=> {
+                event.composeView.setBodyText(response);
+              });
             });
 
         }else{        
-        console.log("Compose inside compose view");
-        getGptKeyFromLocalStorage();
-        getGptModelFromLocalStorage();
-
-        const form = createInnerHTML();
-        // Add the form to the compose view
-        event.composeView.insertHTMLIntoBodyAtCursor(form);
-
-        // Add a submit event listener to the form
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          // Get the value of the prompt input field
-          const textPrompt = form.querySelector('#textPrompt').value;
-          console.log("Compose Email for : "+textPrompt); 
-          const responseText = await generateText(textPrompt);
-          event.composeView.setBodyText(responseText);
+          console.log("Compose inside compose view");
+          const form = createInnerHTML();
+          event.composeView.insertHTMLIntoBodyAtCursor(form);
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Get the value of the prompt input field
+            const textPrompt = form.querySelector('#textPrompt').value;
+            console.log("Compose Email for : "+textPrompt); 
+            const responseText = await generateText(textPrompt);
+            event.composeView.setBodyText(responseText);
         });  
       } 
       },
