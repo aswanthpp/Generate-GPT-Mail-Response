@@ -140,32 +140,32 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
       },
     });
   });
-  sdk.Conversations.registerMessageViewHandler((messageView) => {
-    messageView.addToolbarButton({
-      section: "MORE",
-        title: "Generate GPT Mail!",
-        iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
-        onClick: function(event) {
-          console.log("inside the Message View");
-          getGptKeyFromLocalStorage();
-          getGptModelFromLocalStorage();
-          let textPrompt="Create an email reply for \"";
+  // sdk.Conversations.registerMessageViewHandler((messageView) => {
+  //   messageView.addToolbarButton({
+  //     section: "MORE",
+  //       title: "Generate GPT Mail!",
+  //       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
+  //       onClick: function(event) {
+  //         console.log("inside the Message View");
+  //         getGptKeyFromLocalStorage();
+  //         getGptModelFromLocalStorage();
+  //         let textPrompt="Create an email reply for \"";
       
-          const emailContent=messageView.getBodyElement().textContent;
-          textPrompt+=emailContent+" \"";
+  //         const emailContent=messageView.getBodyElement().textContent;
+  //         textPrompt+=emailContent+" \"";
         
-          console.log("Compose Email for : "+textPrompt);
-          generateText(textPrompt).then((response)=> {
-            console.log(response);
-            // sdk.Compose.openNewComposeView((replyComposeView) => {
-            //   replyComposeView.setBodyText(response);
-            // })
-          });
+  //         console.log("Compose Email for : "+textPrompt);
+  //         generateText(textPrompt).then((response)=> {
+  //           // console.log(response);
+  //           sdk.Compose.openNewComposeView((replyComposeView) => {
+  //             replyComposeView.setBodyText(response);
+  //           })
+  //         });
           
-        },
-        orderHint: 1
-    });
-  });
+  //       },
+  //       orderHint: 1
+  //   });
+  // });
   
 });
 
