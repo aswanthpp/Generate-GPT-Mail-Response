@@ -6,7 +6,7 @@ let GPT_MODEL;
 
 function getGptModelFromLocalStorage(){
   chrome.storage.local.get("gptModel", result => {
-    console.log("Accessing gpt key");
+    console.log("Accessing gpt model");
     if (result.gptKey) {
       GPT_MODEL = result.gptModel;
     } else {
@@ -47,6 +47,8 @@ function createInnerHTML(){
 }
 async function generateText(prompt) {
     console.log("Calling Open AI Completion API");
+    getGptKeyFromLocalStorage();
+    getGptModelFromLocalStorage();
     const url = 'https://api.openai.com/v1/completions';
     const options = {
             method: 'POST',
@@ -68,7 +70,7 @@ async function generateText(prompt) {
         if(response.status>=400){
         const errorResponse=json.error.message;
         alert("Message from OpenAI: "+errorResponse);
-        return null;
+        return errorResponse;
         }
         const gptResponse=json.choices[0].text;
         return gptResponse;
@@ -78,51 +80,66 @@ async function generateText(prompt) {
       }
 }
 
+function preparePromptForReply(messageView){
+  let textPrompt=`I would like to generate responses to email based on the context of the conversation. I would you to read through the mails and generate the response. The conversation context will be passed in the following manner
+  <Recent Reply> <mail content>
+  <Preivous reply> <mail content>
+  <Preivous reply> <mail content>
+  and so on.
+  The conversation will be passed in the order of most recent email first.  You should generate the reply mail to the most recent email exchange\n`;
+const messageArray=messageView.split("------------------- Original Message -------------------")
+const regexPattern = /On[\s\S]*? wrote:/
+let firstIteraction=true;
+messageArray.forEach((message) => {
+   if(firstIteraction){
+       firstIteraction=false;
+       const latestMessage=messageArray[0].split(regexPattern);
+       textPrompt+="<Recent Reply> <"+latestMessage[0]+">\n";
+       textPrompt+="<Preivous reply> <"+latestMessage[1]+">\n";
+   }else{
+       textPrompt+="<Preivous reply> <"+message+">\n";
+   }
+});
+   return textPrompt;
+
+}
+
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
   // the SDK has been loaded, now do something with it!
   sdk.Compose.registerComposeViewHandler((composeView) => {
     // a compose view has come into existence, do something with it!
     composeView.addButton({
-      title: "Magic Wand!",
+      title: "Generate GPT Mail!",
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
       onClick: function(event) {
-        console.log("Compose inside compose view");
-        getGptKeyFromLocalStorage();
-        getGptModelFromLocalStorage();
+        if(event.composeView.isReply()){
+            console.log("inside the reply")
+            sdk.Conversations.registerThreadViewHandler((threadView) => {
+              console.log("inside the messageView")
+              const messageViews=threadView.getMessageViews()[0].getBodyElement().textContent;
+              const textPrompt=preparePromptForReply(messageViews)        
+              console.log("Prompt: "+textPrompt);
+              generateText(textPrompt).then((response)=> {
+                event.composeView.setBodyText(response);
+              });
+            });
 
-        const form = createInnerHTML();
-        // Add the form to the compose view
-        event.composeView.insertHTMLIntoBodyAtCursor(form);
-
-        // Add a submit event listener to the form
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          // Get the value of the prompt input field
-          const textPrompt = form.querySelector('#textPrompt').value;
-          console.log("Compose Email for : "+textPrompt); 
-          const responseText = await generateText(textPrompt);
-          event.composeView.setBodyText(responseText);
-        });   
+        }else{        
+          console.log("Compose inside compose view");
+          const form = createInnerHTML();
+          event.composeView.insertHTMLIntoBodyAtCursor(form);
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Get the value of the prompt input field
+            const textPrompt = form.querySelector('#textPrompt').value;
+            console.log("Compose Email for : "+textPrompt); 
+            const responseText = await generateText(textPrompt);
+            event.composeView.setBodyText(responseText);
+        });  
+      } 
       },
     });
   });
-
-  sdk.Lists.registerMessageViewHandler((conversationView) => {
-    conversationView.addButton({
-      title: "Magic Wand!",
-      iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
-      onClick: function(event) {
-        console.log("Inside conversationView");
-        let textPrompt="Create an email reply for \"";
-    
-        const emailContent=event.conversationView.getTextContent();
-        textPrompt+=emailContent+" \"";
-       
-        console.log("Compose Email for : "+textPrompt);
-        const responseText = resolve(generateText(textPrompt));
-        event.conversationView.insertTextIntoBodyAtCursor(responseText);
-      }
-      });
-  });
+  
 });
 
