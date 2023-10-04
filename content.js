@@ -81,26 +81,48 @@ async function generateText(prompt) {
 }
 
 function preparePromptForReply(messageView){
-  let textPrompt=`I would like to generate responses to email based on the context of the conversation. I would you to read through the mails and generate the response. The conversation context will be passed in the following manner
-  <Recent Reply> <mail content>
-  <Preivous reply> <mail content>
-  <Preivous reply> <mail content>
-  and so on.
-  The conversation will be passed in the order of most recent email first.  You should generate the reply mail to the most recent email exchange\n`;
+  let textPrompt=`I would like to generate responses to email based on the context of the conversation. I would like you to read through the mails and generate the response. The conversation context will be passed in the following manner
+   <First Email> <mail content>
+   <Response Email> <mail content>
+   <Last Email> <mail content>
+   and so on.
+   The conversation will be passed in the chronological order of emails.  You should generate a email text to the last email. Make sure that you should only the email text and no formatting characters.\n`;
 const messageArray=messageView.split("------------------- Original Message -------------------")
 const regexPattern = /On[\s\S]*? wrote:/
+// messageArray.forEach((message) => {
+//    if(firstIteraction){
+//        firstIteraction=false;
+//        const latestMessage=messageArray[0].split(regexPattern);
+//        textPrompt+="<Recent Mail> <"+latestMessage[0]+">\n";
+//        textPrompt+="<Preivous reply> <"+latestMessage[1]+">\n";
+//    }else{
+//        textPrompt+="<Preivous reply> <"+message+">\n";
+//    }
+// });
+
+if(messageArray.length==1){
+  const latestMessage=messageArray[0].split(regexPattern);
+  textPrompt+="<First Email> <"+latestMessage[1]+">\n";
+  textPrompt+="<Last Email> <"+latestMessage[0]+">\n";
+}else{
 let firstIteraction=true;
-messageArray.forEach((message) => {
-   if(firstIteraction){
-       firstIteraction=false;
-       const latestMessage=messageArray[0].split(regexPattern);
-       textPrompt+="<Recent Reply> <"+latestMessage[0]+">\n";
-       textPrompt+="<Preivous reply> <"+latestMessage[1]+">\n";
-   }else{
-       textPrompt+="<Preivous reply> <"+message+">\n";
-   }
-});
-   return textPrompt;
+for(let i=messageArray.length-1;i>0;i--){
+  if(firstIteraction){
+      firstIteraction=false;
+      const latestMessage=messageArray[0].split(regexPattern);
+  textPrompt+="<First Email> <"+latestMessage[1]+">\n";
+  textPrompt+="<Response Email> <"+latestMessage[0]+">\n";
+  }else if(i==0){
+      textPrompt+="<Last Email> <"+latestMessage[0]+">\n";
+
+  }
+  else{
+      textPrompt+="<Response Email> <"+messageArray[i]+">\n";
+  }
+}
+
+}
+return textPrompt;
 
 }
 
