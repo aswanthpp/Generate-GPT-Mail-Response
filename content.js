@@ -23,7 +23,7 @@ function getGptKeyFromLocalStorage() {
       API_KEY = result.gptKey;
       console.log("Open AI key found in local storage.")
     } else {
-      console.error("Open AI Key is not found in local storage.");
+      console.log("Open AI Key is not found in local storage.");
     }
   });
 }
@@ -48,6 +48,8 @@ function createInnerHTML(){
         return form;
 }
 async function generateText(prompt) {
+    getGptKeyFromLocalStorage();
+    getGptModelFromLocalStorage();
     console.log("Invoking Open AI Completion API with "+GPT_MODEL+" model.");
     const url = 'https://api.openai.com/v1/completions';
     const options = {
@@ -122,8 +124,6 @@ function preparePromptForCompose(prompt){
 }
 
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
-  getGptKeyFromLocalStorage();
-  getGptModelFromLocalStorage();
 
   sdk.Compose.registerComposeViewHandler((composeView) => {
     composeView.addButton({
