@@ -2,7 +2,7 @@
 
 ## How to Setup
 
-1. First, click the [link](https://drive.google.com/file/d/1NIpbJDYTCSDNTj5wxuFv73huo81Uaidf/view?usp=sharing) below to download the `generate-gpt-mail-extension.zip` file. Extract the .zip file to whichever location you prefer. The folder that you unzipped will need to live on your machine as long as you are using the extension.
+1. First, click the [link](https://drive.google.com/file/d/1XYYWozarq1eIaijXZOz-AiufsLJiTuMI/view?usp=sharing) to download the `generate-gpt-mail-extension.zip` file. Extract the .zip file to whichever location you prefer. The folder that you unzipped will need to live on your machine as long as you are using the extension.
 
 2. Next, go to [chrome://extensions/](chrome://extensions/) in a new tab. The Extension Management page can also be opened by clicking on the Chrome menu, hovering over More Tools then selecting Extensions. When on the manage extensions page, enable 'Developer mode' by clicking the switch in the upper right corner.
 
@@ -20,21 +20,28 @@
 ### 2. Save Open AI Key
 
 - Get the Open AI API key from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).
-- Paste the key in the form and click submit.
+- Paste the key in the form.
 - Choose the Open AI model from the dropdown.
-- Click `submit`
+- Click `Save`
 
 ![Save Key](./images/save-key.png)
 
-### 2. Generate Email
+### 3. Generate Email
 
-- Go to [mail.google.com](https://mail.google.com/mail/). Click Compose.
-- Click the `Magic Wand` in the Gmail Composeview next to Send in the Composeview.
+#### a. Compose an Email
+- Go to [mail.google.com](https://mail.google.com/mail/). Click `Compose`.
+- Click the `Magic Wand` in the Gmail compose window next to `Send` button.
 
 ![Enter Prompt](./images/sample-compose.png)
 
-### 3. Enter the prompt in the newaly created form and click submit
+- Enter the prompt in the newly created form and click submit. eg:
+```
+Birthday wish for Alice!
+```
+<br><b>The GPT Response will be added as a Mail content!!.</b>
 
-eg prompt: Create a birthday wish email for my friend, Alice
+#### b. Reply to an Email
+- Go to [mail.google.com](https://mail.google.com/mail/). Click `Reply` to an Existing mail thread.
+- Click the `Magic Wand` in the Gmail compose window next to `Send` button.
 
-<b>The GPT Response will be added as a Mail content!!.</b>
+<br><b>This will generate the reply email based on the mail conversation.</b>
