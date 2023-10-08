@@ -1,9 +1,9 @@
-name: Run npm start on Tag
+name: Run npm start on master push
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master
 
 jobs:
   build:
