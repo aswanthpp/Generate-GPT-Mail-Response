@@ -5,13 +5,14 @@ let API_KEY;
 let GPT_MODEL;
 
 function getGptModelFromLocalStorage(){
-  chrome.storage.local.get("gptModel", result => {
+  chrome.storage.local.get('gptModel', result => {
     console.log("Accessing gpt model");
-    if (result.gptKey) {
+    if (result.gptModel) {
       GPT_MODEL = result.gptModel;
+      console.log("Model found in local storage. Assigining "+GPT_MODEL+" model");
     } else {
       GPT_MODEL="text-davinci-002";
-      console.log("Model not found in local storage. Assigining default model");
+      console.log("Model not found in local storage. Assigining default model, "+GPT_MODEL);
     }
   });
 }
@@ -20,8 +21,9 @@ function getGptKeyFromLocalStorage() {
     console.log("Accessing gpt key");
     if (result.gptKey) {
       API_KEY = result.gptKey;
+      console.log("Open AI key found in local storage.")
     } else {
-      console.error("No 'gptKey' found in local storage.");
+      console.log("Open AI Key is not found in local storage.");
     }
   });
 }
@@ -46,9 +48,9 @@ function createInnerHTML(){
         return form;
 }
 async function generateText(prompt) {
-    console.log("Calling Open AI Completion API");
     getGptKeyFromLocalStorage();
     getGptModelFromLocalStorage();
+    console.log("Invoking Open AI Completion API with "+GPT_MODEL+" model.");
     const url = 'https://api.openai.com/v1/completions';
     const options = {
             method: 'POST',
@@ -70,7 +72,7 @@ async function generateText(prompt) {
         if(response.status>=400){
         const errorResponse=json.error.message;
         alert("Message from OpenAI: "+errorResponse);
-        return errorResponse;
+        return null;
         }
         const gptResponse=json.choices[0].text;
         return gptResponse;
@@ -116,18 +118,20 @@ return textPrompt;
 
 }
 
+function preparePromptForCompose(prompt){
+  let finalPrompt="Compose an Email for \""+prompt+"\". Your response should only contain the email body text. "
+  return finalPrompt
+}
+
 InboxSDK.load(2, SDK_KEY).then((sdk) => {
-  // the SDK has been loaded, now do something with it!
+
   sdk.Compose.registerComposeViewHandler((composeView) => {
-    // a compose view has come into existence, do something with it!
     composeView.addButton({
       title: "Generate GPT Mail!",
       iconUrl: 'https://img.icons8.com/?size=512&id=6mIR8nIuhBsJ&format=png',
       onClick: function(event) {
         if(event.composeView.isReply()){
-            console.log("inside the reply")
             sdk.Conversations.registerThreadViewHandler((threadView) => {
-              console.log("inside the messageView")
               const messageViews=threadView.getMessageViews()[0].getBodyElement().textContent;
               const textPrompt=preparePromptForReply(messageViews)        
               console.log("Prompt: "+textPrompt);
@@ -137,16 +141,16 @@ InboxSDK.load(2, SDK_KEY).then((sdk) => {
             });
 
         }else{        
-          console.log("Compose inside compose view");
           const form = createInnerHTML();
           event.composeView.insertHTMLIntoBodyAtCursor(form);
           form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Get the value of the prompt input field
-            const textPrompt = form.querySelector('#textPrompt').value;
-            console.log("Compose Email for : "+textPrompt); 
+            const textPrompt = preparePromptForCompose(form.querySelector('#textPrompt').value);
+            console.log("Prompt: "+textPrompt); 
             const responseText = await generateText(textPrompt);
-            event.composeView.setBodyText(responseText);
+            if(responseText!=null){
+              event.composeView.setBodyText(responseText);
+            }
         });  
       } 
       },
