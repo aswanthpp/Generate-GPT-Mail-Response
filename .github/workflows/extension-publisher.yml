@@ -16,5 +16,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run npm start
+      - name: Run npm build
         run: npm run build
+
+      - name: Create Zip of Browser Extension
+        run: |
+           zip -r generate-gpt-mail-extension.zip generate-gpt-mail-extension
+
+      - name: Upload Zip Archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: generate-gpt-mail-extension
+          path: generate-gpt-mail-extension.zip
