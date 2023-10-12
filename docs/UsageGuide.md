@@ -2,7 +2,7 @@
 
 ## How to Setup
 
-1. First, click the [link](https://drive.google.com/file/d/1XYYWozarq1eIaijXZOz-AiufsLJiTuMI/view?usp=sharing) to download the `generate-gpt-mail-extension.zip` file. Extract the .zip file to whichever location you prefer. The folder that you unzipped will need to live on your machine as long as you are using the extension.
+1. First, click the [link](https://github.com/aswanthpp/Generate-GPT-Mail-Response/suites/17171326073/artifacts/981156072) to download the `generate-gpt-mail-extension.zip` file. Extract the .zip file to whichever location you prefer. The folder that you unzipped will need to live on your machine as long as you are using the extension.
 
 2. Next, go to [chrome://extensions/](chrome://extensions/) in a new tab. The Extension Management page can also be opened by clicking on the Chrome menu, hovering over More Tools then selecting Extensions. When on the manage extensions page, enable 'Developer mode' by clicking the switch in the upper right corner.
 
