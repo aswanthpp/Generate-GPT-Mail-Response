@@ -1,4 +1,4 @@
-name: Run npm start on master push
+name: Build Chrome Extension on main push
 
 on:
   push:
@@ -17,4 +17,4 @@ jobs:
         run: npm install
 
       - name: Run npm start
-        run: npm start
+        run: npm run build
