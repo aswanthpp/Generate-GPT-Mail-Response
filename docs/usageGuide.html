@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Guide for Generate GPT Mail</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="mt-4">User Guide for Generate GPT Mail</h1>
+
+        <div class="alert alert-info mt-4">
+            <strong>Note:</strong> This guide provides instructions for setting up and using the Generate GPT Mail extension.
+        </div>
+
+        <h2 class="mt-4">How to Setup</h2>
+
+        <ol>
+            <li>First, click the <a href="https://github.com/aswanthpp/Generate-GPT-Mail-Response/suites/17171326073/artifacts/981156072">link</a> to download
+                the <code>generate-gpt-mail-extension.zip</code> file. Extract the .zip file to whichever location you prefer.
+                The folder that you unzipped will need to live on your machine as long as you are using the extension.</li>
+            <li>Next, go to <a href="chrome://extensions/">chrome://extensions/</a> in a new tab. The Extension Management page can
+                also be opened by clicking on the Chrome menu, hovering over More Tools then selecting Extensions. When on the
+                manage extensions page, enable 'Developer mode' by clicking the switch in the upper right corner.</li>
+            <li>Finally, on the <a href="chrome://extensions/">chrome://extensions/</a>, click the button on the upper left to "Load
+                unpacked" and select the unzipped <code>generate-gpt-mail-extension</code> folder to install it.</li>
+        </ol>
+
+        <h2 class="mt-4">How to use</h2>
+
+        <h3>1. Manage Extensions</h3>
+
+        <ul>
+            <li>Click the Extensions in your chrome, next to the URL form in the top right corner.</li>
+            <li>Then click the <code>Generate GPT Mail</code> icon.</li>
+        </ul>
+
+        <img src="./images/manage-extension.png" class="img-fluid mt-3" alt="manage-extension Key">
+
+        <h3>2. Save Open AI Key</h3>
+
+        <ul>
+            <li>Get the Open AI API key from <a href="https://platform.openai.com/account/api-keys">https://platform.openai.com/account/api-keys</a>.</li>
+            <li>Paste the key in the form.</li>
+            <li>Choose the Open AI model from the dropdown.</li>
+            <li>Click <code>Save</code></li>
+        </ul>
+
+        <img src="./images/save-key.png" class="img-fluid mt-3" alt="Save Key">
+
+        <h3>3. Generate Email</h3>
+
+        <h4>a. Compose an Email</h4>
+
+        <ul>
+            <li>Go to <a href="https://mail.google.com/mail/">mail.google.com</a>. Click <code>Compose</code>.</li>
+            <li>Click the <code>Magic Wand</code> in the Gmail compose window next to <code>Send</code> button.</li>
+        </ul>
+
+        <img src="./images/sample-compose.png" class="img-fluid mt-3" alt="Enter Prompt">
+
+        <p>Enter the prompt in the newly created form and click submit. eg:</p>
+
+        <pre>
+        Birthday wish for Alice!
+        </pre>
+
+        <p><b>The GPT Response will be added as a Mail content!!.</b></p>
+
+        <h4>b. Reply to an Email</h4>
+
+        <ul>
+            <li>Go to <a href="https://mail.google.com/mail/">mail.google.com</a>. Click <code>Reply</code> to an Existing mail thread.</li>
+            <li>Click the <code>Magic Wand</code> in the Gmail compose window next to <code>Send</code> button.</li>
+        </ul>
+
+        <p><b>This will generate the reply email based on the mail conversation.</b></p>
+
+    </div>
+
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
